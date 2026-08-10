@@ -6,3 +6,12 @@
 
 # VS Code
 .vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Node
+node_modules/
+dist/
