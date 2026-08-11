@@ -1,19 +1,37 @@
+import os
+from collections.abc import Generator
+from pathlib import Path
+
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
 
-DATABASE_URL = "postgresql+psycopg://localhost/make_work_flow"
+# Load local development values without committing secrets.
+load_dotenv(Path(__file__).with_name(".env"))
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise RuntimeError(
+        "DATABASE_URL is not set. Copy backend/.env.example to backend/.env."
+    )
 
 
 engine = create_engine(DATABASE_URL)
 
 
 SessionLocal = sessionmaker(
-    bind=engine,          # Connect sessions to this database
-    autoflush=False,      # Flush changes only when we choose
-    autocommit=False, 
+    bind=engine,
+    autoflush=False,
+    autocommit=False,
 )
 
 
 class Base(DeclarativeBase):
     pass
+
+
+def get_db() -> Generator[Session, None, None]:
+    # Give each request its own session and close it afterward.
+    with SessionLocal() as db:
+        yield db
