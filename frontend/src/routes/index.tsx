@@ -36,29 +36,65 @@ function HomePage() {
   })
 
   return (
-    <main>
-      <h1>MAKE WORK FLOW Technical Task</h1>
+    <main className="page-shell">
+      <header className="page-header">
+        <div>
+          <p className="eyebrow">Technical Task</p>
+          <h1>MAKE WORK FLOW</h1>
+          <p className="page-description">
+            Load and review the users currently in the system.
+          </p>
+        </div>
 
-      <button
-        type="button"
-        onClick={() => refetch()}
-        disabled={isFetching}
-      >
-        {isFetching ? 'Loading...' : 'Load Users'}
-      </button>
+        <button
+          type="button"
+          onClick={() => refetch()}
+          disabled={isFetching}
+        >
+          {isFetching ? 'Loading...' : users ? 'Refresh users' : 'Load users'}
+        </button>
+      </header>
 
-      {error && <p>Failed to load users.</p>}
+      {error && (
+        <p className="message message-error" role="alert">
+          Failed to load users. Please try again.
+        </p>
+      )}
 
       {users && (
-        <ul>
-          {users.map((user) => (
-            <li key={user.id}>
-              <strong>{user.name}</strong>
-              <br />
-              {user.email}
-            </li>
-          ))}
-        </ul>
+        <section className="users-panel" aria-labelledby="users-heading">
+          <div className="panel-heading">
+            <h2 id="users-heading">Users</h2>
+            <span className="user-count">
+              {users.length} {users.length === 1 ? 'user' : 'users'}
+            </span>
+          </div>
+
+          {users.length > 0 ? (
+            <div className="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map((user) => (
+                    <tr key={user.id}>
+                      <td>{user.name}</td>
+                      <td>
+                        <a href={`mailto:${user.email}`}>{user.email}</a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="empty-state">No users found.</p>
+          )}
+        </section>
       )}
     </main>
   )
