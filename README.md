@@ -147,6 +147,7 @@ Run the backend and frontend checks from the repository root:
 
 ```sh
 cd backend
+uv run pytest
 uv run python -m compileall -q .
 
 cd ../frontend
