@@ -15,12 +15,13 @@ from schemas import MessageResponse, UserResponse
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+# Keep route signatures concise with a reusable database session dependency.
 DatabaseSession = Annotated[Session, Depends(get_db)]
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
-    # Create the schema and seed demo users once when the app starts.
+    # Create tables and seed demo data on startup.
     Base.metadata.create_all(bind=engine)
 
     with SessionLocal() as db:

@@ -7,7 +7,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
 
-# Load local development values without committing secrets.
+# Load local development settings from backend/.env.
 load_dotenv(Path(__file__).with_name(".env"))
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -32,6 +32,6 @@ class Base(DeclarativeBase):
 
 
 def get_db() -> Generator[Session, None, None]:
-    # Give each request its own session and close it afterward.
+    # Provide and close a database session for each request.
     with SessionLocal() as db:
         yield db

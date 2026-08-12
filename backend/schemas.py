@@ -8,6 +8,7 @@ class MessageResponse(BaseModel):
 
 
 class UserResponse(BaseModel):
+    # Build this response model directly from a SQLAlchemy User object.
     model_config = ConfigDict(from_attributes=True)
 
     id: int
