@@ -8,19 +8,13 @@ backend, and PostgreSQL. The frontend loads and displays users from the API.
 This is the simplest way to run the complete application. Docker Desktop (or a
 compatible Docker engine) is the only prerequisite.
 
-1. Create the local environment file from the provided template:
+1. Build and start the database, backend, and frontend:
 
    ```sh
-   cp .env.example .env
+   docker compose up
    ```
 
-2. Build and start the database, backend, and frontend:
-
-   ```sh
-   docker compose up --build
-   ```
-
-3. Open the application:
+2. Open the application:
 
    - Frontend: `http://localhost:5173`
    - API documentation: `http://localhost:8000/docs`
@@ -36,10 +30,20 @@ docker compose down
 
 The PostgreSQL data remains in the named Docker volume between runs.
 
+No setup or environment file is required. Compose uses safe local defaults and
+builds images automatically on the first run.
+
 ## Environment variables
 
-Docker Compose reads the root `.env` file automatically. Vite also reads this
-file when the frontend is run locally.
+Environment configuration is optional for Docker. To customize the defaults,
+create a root `.env` file from the provided template before starting Compose:
+
+```sh
+cp .env.example .env
+```
+
+Docker Compose reads this file automatically. Vite also reads it when the
+frontend is run locally.
 
 | Variable | Used for | Local value |
 | --- | --- | --- |
@@ -49,9 +53,9 @@ file when the frontend is run locally.
 | `VITE_API_BASE_URL` | API address used by the browser | `http://localhost:8000` |
 | `FRONTEND_ORIGIN` | Origin allowed by backend CORS | `http://localhost:5173` |
 
-Compose constructs `DATABASE_URL` for the backend from the three PostgreSQL
-variables. When running the backend without Docker, `backend/.env` supplies
-`DATABASE_URL` directly instead.
+Compose provides the listed local values when `.env` is absent and constructs
+`DATABASE_URL` from the three PostgreSQL variables. When running the backend
+without Docker, `backend/.env` supplies `DATABASE_URL` directly instead.
 
 Keep these points in mind when changing the configuration:
 
