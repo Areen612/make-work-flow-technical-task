@@ -11,6 +11,7 @@ from sqlalchemy.orm import Session
 from db import Base, SessionLocal, engine, get_db
 from model import User
 from schemas import MessageResponse, UserResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 
 logging.basicConfig(level=logging.INFO)
@@ -51,6 +52,17 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# Allow the React frontend to call this API during development.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+
+)
 
 @app.get("/")
 def root() -> MessageResponse:
