@@ -7,8 +7,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 
 
-# Load local development settings from backend/.env.
-load_dotenv(Path(__file__).with_name(".env"))
+# Load shared project settings, then allow backend/.env to override them for
+# standalone backend development.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+load_dotenv(PROJECT_ROOT / ".env")
+load_dotenv(Path(__file__).with_name(".env"), override=True)
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 if not DATABASE_URL:

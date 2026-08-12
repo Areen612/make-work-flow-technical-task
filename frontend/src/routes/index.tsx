@@ -9,8 +9,14 @@ type User = {
   updated_at: string
 }
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL?.replace(/\/+$/, '')
+
 async function fetchUsers(): Promise<User[]> {
-  const response = await fetch('http://localhost:8000/users')
+  if (!apiBaseUrl) {
+    throw new Error('VITE_API_BASE_URL is not configured')
+  }
+
+  const response = await fetch(`${apiBaseUrl}/users`)
 
   if (!response.ok) {
     throw new Error('Failed to fetch users')
