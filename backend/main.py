@@ -1,5 +1,4 @@
 import logging
-import os
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from typing import Annotated
@@ -10,6 +9,7 @@ from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session
 
+from config import settings
 from db import Base, SessionLocal, engine, get_db
 from model import User
 from schemas import MessageResponse, UserResponse
@@ -19,10 +19,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 # Keep route signatures concise with a reusable database session dependency.
 DatabaseSession = Annotated[Session, Depends(get_db)]
-
-FRONTEND_ORIGIN = os.getenv("FRONTEND_ORIGIN")
-if not FRONTEND_ORIGIN:
-    raise RuntimeError("FRONTEND_ORIGIN is not set in the environment.")
 
 
 @asynccontextmanager
@@ -60,7 +56,7 @@ app = FastAPI(
 # Allow the React frontend to call this API during development.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[FRONTEND_ORIGIN],
+    allow_origins=[settings.frontend_origin],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
